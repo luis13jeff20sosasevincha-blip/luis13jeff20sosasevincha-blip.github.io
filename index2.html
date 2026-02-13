@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>San Valentín</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet">
+<style>
+/* TODO TU CSS EXACTAMENTE IGUAL */
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    font-family: "Limelight", sans-serif;
+    overflow:hidden;
+}
+
+.contenedor{
+    width:650px;
+    min-height:200px;
+    background:white;
+    border-radius:20px;
+    box-shadow:0 15px 30px rgba(0,0,0,0.2);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:80px;
+    text-align:center;
+    position:relative;
+    transition: all 0.6s ease;
+}
+
+.fade-out{
+    opacity:0;
+    transform:translateY(-20px);
+}
+
+.fade-in{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.pregunta{
+    font-size:35px;
+    font-weight:bold;
+    margin-bottom:40px;
+    color:#ff4b5c;
+}
+
+.pregunta2{
+    font-size:35px;
+    font-weight:bold;
+    margin-bottom:2px;
+    color:#ff4b5c;
+}
+
+button{
+    padding: 15px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    position: absolute;
+    transition: all 0.3s ease;
+}
+
+button:hover{
+    transform:scale(1.08);
+}
+
+#si{
+    background:#4CAF50;
+    color:white;
+    left: 30%;
+}
+
+#no{
+    background:#f44336;
+    color:white;
+    left: 60%;
+}
+
+.continuar{
+    background:#ff4b5c;
+    color:white;
+    margin-top:500px;
+}
+
+.imagen{
+    width:300px;
+    margin-top:2px;
+    border-radius:15px;
+    opacity:0;
+    transform:scale(0.9);
+    transition: all 0.6s ease;
+}
+
+.imagen.visible{
+    opacity:1;
+    transform:scale(1);
+}
+</style>
+</head>
+
+<body>
+
+<div class="contenedor" id="pantalla">
+
+    <div class="pregunta">
+        ¿TE GUSTARÍA SER MI SAN VALENTÍN?
+    </div>
+
+    <div>
+        <button id="si">SI</button>
+        <button id="no">NO</button>
+    </div>
+
+</div>
+
+<!-- 🎵 AUDIO AGREGADO -->
+<audio id="musica" loop>
+    <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+const pantalla = document.getElementById("pantalla");
+const botonSi = document.getElementById("si");
+const botonNo = document.getElementById("no");
+const musica = document.getElementById("musica");
+
+/* Volumen suave */
+musica.volume = 0.3;
+
+/* BOTÓN NO ESCURRIDIZO */
+botonNo.addEventListener("mouseover", () => {
+    const x = Math.random() * 300 - 150;
+    const y = Math.random() * 200 - 100;
+    botonNo.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+/* CONTENIDO DE LAS PORTADAS */
+const portadas = [
+    {
+        texto:"Dicen que todo gran proyecto empieza con un buen plano... y yo creo que el mío empezó el día que te conocí.",
+        imagen:"imagen1.jpg"
+    },
+    {
+        texto:"Yo construiré estructuras… pero tú construyes sueños con palabras. Y eso me parece mucho más impresionante.",
+        imagen:"imagen2.jpg"
+    },
+    {
+        texto:"Los puentes conectan ciudades... Tú conectas corazones y futuros... Y yo solo quiero construir algo bonito contigo.",
+        imagen:"imagen3.jpg"
+    },
+    {
+        texto:"Si la vida fuera un proyecto… yo pondría en los planos: estabilidad, paciencia, risas… y TÚ como parte fundamental de la estructura.",
+        imagen:"imagen4.jpg"
+    }
+];
+
+let indice = 0;
+
+function mostrarPortada(){
+
+    pantalla.classList.add("fade-out");
+
+    setTimeout(()=>{
+
+        const contenido = portadas[indice];
+
+        pantalla.innerHTML = `
+            <div class="pregunta">${contenido.texto}</div>
+            <img src="${contenido.imagen}" class="imagen" id="imgPortada">
+            <button class="continuar">CONTINUAR</button>
+        `;
+
+        pantalla.classList.remove("fade-out");
+        pantalla.classList.add("fade-in");
+
+        const imagen = document.getElementById("imgPortada");
+
+        setTimeout(()=>{
+            imagen.classList.add("visible");
+        },100);
+
+        const botonContinuar = document.querySelector(".continuar");
+
+        botonContinuar.addEventListener("click", ()=>{
+            indice++;
+            if(indice < portadas.length){
+                mostrarPortada();
+            }else{
+                pantalla.classList.add("fade-out");
+                setTimeout(()=>{
+                    pantalla.innerHTML = `
+                        <div class="pregunta2">
+                            No sé qué tan largo será el proyecto… pero me encantaría que empezáramos a construirlo juntos. ❤️
+                        </div>
+                    `;
+                    pantalla.classList.remove("fade-out");
+                },600);
+            }
+        });
+
+    },600);
+}
+
+/* AL DAR CLICK EN SI */
+botonSi.addEventListener("click", ()=>{
+    musica.play();   // 🎵 AQUÍ INICIA LA MÚSICA
+    mostrarPortada();
+});
+
+</script>
+
+</body>
+</html>
